@@ -1,3 +1,2 @@
-#encoding:UTF-8
 # utils
-各种辅助工具(自用)
+鍚勭杈呭姪宸ュ叿(鑷敤)
