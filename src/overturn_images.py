@@ -6,8 +6,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-path = '/media/zhaoke/b0685ee4-63e3-4691-ae02-feceacff6996/data/'
-dst_path = '/media/zhaoke/b0685ee4-63e3-4691-ae02-feceacff6996/rctw17_overturn_east/'
+path = 'c:/Users/zhaoke1/Desktop/data_temp/'
+dst_path = 'c:/Users/zhaoke1/Desktop/data_temp_overturn/'
 
 def overturn_lr(x):
     def _overturn_lr(*args):
@@ -23,7 +23,7 @@ def overturn_ud(y):
 def main():
     paths = [i for i in os.listdir(path) if '.jpg' in i]
     #lr
-    for i in paths[:100]:
+    for i in paths:
         img = cv2.imread(path+i)
         y, x = img.shape[:2]
         overturn_func = overturn_lr(x)
@@ -51,7 +51,7 @@ def main():
         f.write(polys)
         f.close()
     #ud
-    for i in paths[:100]:
+    for i in paths:
         img = cv2.imread(path+i)
         y, x = img.shape[:2]
         overturn_func = overturn_ud(y)
