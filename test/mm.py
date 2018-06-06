@@ -101,8 +101,8 @@ def showmm2_1(ratio, times):
     #plt.show()
     a = np.argmax(result.mean(axis=0))
     b = np.argmax(result.mean(axis=0)-result.std(axis=0))
-    print('the max mean is at %f, and max mean is %f'%(0.001*(a-1), np.max(result.mean(axis=0))))
-    print('the max diff is at %f, and max diff is %f'%(0.001*(b-1), np.max(result.mean(axis=0)-result.std(axis=0))))
+    print('the max mean is at %f, and max mean is %f'%(0.001*(a+1), np.max(result.mean(axis=0))))
+    print('the max diff is at %f, and max diff is %f'%(0.001*(b+1), np.max(result.mean(axis=0)-result.std(axis=0))))
     print('end')
     
 def showmm2_2():
@@ -130,7 +130,7 @@ def showmm2_3():
         
 def main():
     #showmm2_2()
-    showmm2_2()
+    showmm2_3()
 
 if __name__ == '__main__':
     main()

@@ -103,3 +103,4 @@ ENV/
 # exclude files
 data/
 results/
+src/img_tmp
