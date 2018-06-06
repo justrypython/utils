@@ -20,3 +20,9 @@ def get_background_color(img):
         color = np.where(ms==np.max(ms))[0][0]
         bg_color.append(color)
     return bg_color
+
+def get_background(img):
+    bg_color = get_background_color(img)
+    bg = np.zeros(img.shape, dtype=np.uint8)
+    bg[:, :] = bg_color
+    return bg

@@ -40,6 +40,16 @@ class GetBackGroundColorTest(unittest.TestCase):
         plt.imshow(newimg)
         plt.show()
         print('end')
+    
+    def test_get_background(self):
+        bg = get_background_color.get_background(self.img)
+        fig = plt.figure()
+        plt.subplot(1, 2, 1)
+        plt.imshow(self.img)
+        plt.subplot(1, 2, 2)
+        plt.imshow(bg)
+        plt.show()
+        print('end')
         
     def test_move_average(self):
         a = np.arange(20)
@@ -54,6 +64,7 @@ def suite():
     suite = unittest.TestSuite()
     suite.addTest(GetBackGroundColorTest('test_0'))
     suite.addTest(GetBackGroundColorTest('test_get_background_color'))
+    suite.addTest(GetBackGroundColorTest('test_get_background'))
     suite.addTest(GetBackGroundColorTest('test_move_average'))
     return suite
 
