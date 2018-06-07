@@ -11,13 +11,39 @@ import get_background_color
 class GetBackGroundColorTest(unittest.TestCase):
     
     def setUp(self):
-        self.img = cv2.imread('20180516174219.jpg')
+        self.img = cv2.imread('wen11060502_clip_image001.jpg')
     
     def tearDown(self):
         pass
     
     def test_0(self):
         a = self.img[:, :, 0]
+        b = np.histogram(a, bins=256)
+        ms0 = get_background_color.move_average(b[0])
+        ms1 = get_background_color.move_average(b[0], n=20)
+        fig = plt.figure()
+        plt.subplot(2, 1, 1)
+        plt.plot(ms0)
+        plt.subplot(2, 1, 2)
+        plt.plot(ms1)
+        plt.show()
+        print('end')
+    
+    def test_1(self):
+        a = self.img[:, :, 1]
+        b = np.histogram(a, bins=256)
+        ms0 = get_background_color.move_average(b[0])
+        ms1 = get_background_color.move_average(b[0], n=20)
+        fig = plt.figure()
+        plt.subplot(2, 1, 1)
+        plt.plot(ms0)
+        plt.subplot(2, 1, 2)
+        plt.plot(ms1)
+        plt.show()
+        print('end')
+    
+    def test_2(self):
+        a = self.img[:, :, 2]
         b = np.histogram(a, bins=256)
         ms0 = get_background_color.move_average(b[0])
         ms1 = get_background_color.move_average(b[0], n=20)
@@ -63,6 +89,8 @@ class GetBackGroundColorTest(unittest.TestCase):
 def suite():
     suite = unittest.TestSuite()
     suite.addTest(GetBackGroundColorTest('test_0'))
+    suite.addTest(GetBackGroundColorTest('test_1'))
+    suite.addTest(GetBackGroundColorTest('test_2'))
     suite.addTest(GetBackGroundColorTest('test_get_background_color'))
     suite.addTest(GetBackGroundColorTest('test_get_background'))
     suite.addTest(GetBackGroundColorTest('test_move_average'))
