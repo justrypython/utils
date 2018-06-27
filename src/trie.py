@@ -230,7 +230,6 @@ class EngCorrect(object):
         return s in self.trie
         
     def get_similar(self, s):
-        s = ''.join([i for i in s if i not in string.punctuation])
         return self.trie.get_similar(s)
 
 if __name__ == '__main__':
@@ -255,6 +254,7 @@ if __name__ == '__main__':
         ret1 = []
         i = i.lower()
         print(i)
+        i = ''.join([k for k in i if k not in string.punctuation])
         for j in i.split():
             ret1.append(spell(j))
             if j in trie:

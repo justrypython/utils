@@ -8,7 +8,7 @@ import multiprocessing
 
 def job(q):
     ret = 0
-    for i in range(100000000):
+    for i in range(1000000):
         ret = i + i**2 + i**3
     q.put(ret)
     
