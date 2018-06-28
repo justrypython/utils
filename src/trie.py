@@ -244,7 +244,8 @@ if __name__ == '__main__':
     print('\n')
     print('load time is ', end_time - start_time)
 
-    file_path = '9781601988157-summary14.result'    
+    #file_path = '9781601988157-summary14.result'    
+    file_path = '20180521112149am__cd4977c55ce44fd7b4d4d5d188e00b00_1_9.2.2_Build.VERSION.RELEASE.result'
     with open(file_path, 'r', encoding='utf-8') as f:
         lines = f.readlines()
     for i in lines:
