@@ -8,7 +8,7 @@ import string
 
 def main():
     #file_path = 'e:/justrypython/utils/data/500w.txt'
-    dir_path = 'e:/justrypython/utils/data/english/'
+    dir_path = '/media/zhaoke/b0685ee4-63e3-4691-ae02-feceacff6996/data/english/'
     word_path = "e:/justrypython/ks_scan_ocr/ks_scan_ocr/src/emendate_chars/engwordlist.txt"
     ret = {}
     file_paths = []
@@ -42,7 +42,7 @@ def main():
             #s += '%s %d\n'%(i, ret[i])
     s = ''
     for i, j in ret.items():
-        if j > 1000:
+        if j > 200:
             s += '%s %d\n'%(i, j)
     with open('engwordlist.txt', 'w', encoding='utf-8') as f:
         f.write(s)
