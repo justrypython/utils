@@ -30,6 +30,16 @@ class CutWordTest(unittest.TestCase):
         s0 = 'maleIhadanadvantageOver'.lower()
         s1 = cut_word.infer_spaces(s0)
         self.assertEqual(s1, 'male i had an advantage over')
+    
+    def test_4(self):
+        s0 = 'studentsbeing'.lower()
+        s1 = cut_word.infer_spaces(s0)
+        self.assertEqual(s1, 'students being')
+    
+    def test_5(self):
+        s0 = 'accdcosd'.lower()
+        s1 = cut_word.infer_spaces(s0)
+        self.assertEqual(s1, 'students being')
         
     
 def suite():
@@ -38,6 +48,8 @@ def suite():
     suite.addTest(CutWordTest('test_1'))
     suite.addTest(CutWordTest('test_2'))
     suite.addTest(CutWordTest('test_3'))
+    suite.addTest(CutWordTest('test_4'))
+    suite.addTest(CutWordTest('test_5'))
     return suite
 
 if __name__ == '__main__':
