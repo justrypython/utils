@@ -4,7 +4,9 @@ import uuid
 
 class FibonacciRpcClient(object):
     def __init__(self):
-        self.connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+        credentials = pika.PlainCredentials('justry', '123456')
+        self.connection = pika.BlockingConnection(pika.ConnectionParameters(host='192.168.145.34',))
+                                                                            #credentials=credentials))
 
         self.channel = self.connection.channel()
 
