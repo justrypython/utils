@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 import pika
 
-connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+credentials = pika.PlainCredentials('justry', '123456')
+
+connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost', credentials=credentials))
 channel = connection.channel()
 
 
