@@ -50,7 +50,11 @@ class AsyncPublisher(object):
         :rtype: pika.SelectConnection
         """
         LOGGER.info('Connecting to %s', self._url)
-        return pika.SelectConnection(pika.URLParameters(self._url),
+        credentials = pika.PlainCredentials('justry', '123456')
+        parameters = pika.ConnectionParameters("192.168.145.34",
+                                               "5672",
+                                               credentials=credentials)
+        return pika.SelectConnection(parameters,
                                      self.on_connection_open,
                                      stop_ioloop_on_close=False)
 
@@ -319,7 +323,7 @@ def main():
     logging.basicConfig(level=logging.DEBUG, format=LOG_FORMAT)
 
     # Connect to localhost:5672 as guest with the password guest and virtual host "/" (%2F)
-    ap = AsyncPublisher('amqp://guest:guest@localhost:5672/%2F?connection_attempts=3&heartbeat_interval=3600')
+    ap = AsyncPublisher('amqp://guest:guest@192.168.145.34:5672/%2F?connection_attempts=3&heartbeat_interval=3600')
     try:
         ap.run()
     except KeyboardInterrupt:
