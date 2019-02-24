@@ -6,12 +6,18 @@ import os
 import json
 import time
 import string
+import pickle
+import numpy as np
 import multiprocessing
+from ks_nature_scene_ocr.line_recog.infer import line_recog_v1
+
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 
 class ProccessEnqueuer(object):
     
-    def __init__(self, paths, workers=5, max_queue_size=15):
-        self.paths = paths
+    def __init__(self, image_boxes, bounding_boxes, workers=1, max_queue_size=15):
+        self.image_boxes = image_boxes
+        self.bounding_boxes = bounding_boxes
         self.wait_time = 2
         self.workers = workers
         self._threads = {i:None for i in range(workers)}
@@ -19,21 +25,26 @@ class ProccessEnqueuer(object):
         self.queue = multiprocessing.Queue(maxsize=max_queue_size)
         self.ret = []
         self._load_cnt = 0
+        model_path_ch = "/data/anaconda3/lib/python3.6/site-packages/ks_nature_scene_ocr/models/line_recog/ocr_168_engv1.ckpt-110000"
+        self.recognizer = line_recog_v1.LineRecog(model_path_ch)
         
     def start(self, workers=5):
         try:
-            while len(self.paths):
-                import wingdbstub
-                wingdbstub.Ensure()
-                wingdbstub.debugger.StartDebug()
+            while len(self.image_boxes):
+                #import wingdbstub
+                #wingdbstub.Ensure()
+                #wingdbstub.debugger.StartDebug()
                 self._get_ret()
                 for i in self._threads.keys():
-                    if self._threads[i] is None and len(self.paths):
-                        thread = multiprocessing.Process(target=get_word_dict, args=(self.paths.pop(), self.queue, i, ))
+                    if self._threads[i] is None and len(self.image_boxes):
+                        thread = multiprocessing.Process(target=get_word_dict, args=(self.recognizer,
+                                                                                     self.image_boxes.pop(),
+                                                                                     self.bounding_boxes.pop(),
+                                                                                     self.queue, i, ))
                         thread.daemon = True
                         self._threads[i] = thread
                         thread.start()
-                wingdbstub.debugger.StopDebug()
+                #wingdbstub.debugger.StopDebug()
             self._get_ret()
             self.stop()
         except:
@@ -80,17 +91,16 @@ def combineRet(dicts):
     return ret
 
 def main():
-    dir_path = '/media/zhaoke/b0685ee4-63e3-4691-ae02-feceacff6996/data/english/'
-    ret = {}
-    file_paths = []
-    for root, _, files in os.walk(dir_path):
-        for i in files:
-            file_paths.append(dir_path+i)
+    with open('image_boxes.pickle', 'rb') as handle:
+        image_boxes = pickle.load(handle)
+    with open('bounding_boxes.pickle', 'rb') as handle:
+        bounding_boxes = pickle.load(handle)
+    bounding_boxes = [i for i in bounding_boxes]
     times = {}
     for workers in [10, 5, 2, 1]:
         ret = {}
         st = time.time()
-        processes = ProccessEnqueuer(file_paths[:12], workers)
+        processes = ProccessEnqueuer(image_boxes, bounding_boxes, workers)
         processes.start()
         et = time.time()
         times[workers] = et - st
@@ -107,31 +117,19 @@ def main():
     #with open('engwordlist.txt', 'w', encoding='utf-8') as f:
         #f.write(s)
 
-def get_word_dict(filepath, q, id_):
-    #if id_ == 0:
-        #import wingdbstub
-        #wingdbstub.Ensure()
-        #wingdbstub.debugger.StartDebug()
-    ret = {}
-    line_cnt = 0
-    with open(filepath, 'r', encoding='utf-8') as f:
-        lines = f.readlines()
-    for k, i in enumerate(lines):
-        line_cnt += 1
-        i = i.replace('\n', '')
-        for j in string.punctuation:
-            i = i.replace(j, '').lower()
-        for j in i.split():
-            if j.isalpha():
-                cnt = ret.get(j, 0)
-                cnt += 1
-                ret[j] = cnt
-        if line_cnt%10000==0:
-            print(line_cnt)
+def get_word_dict(recognizer, img_box, bounding_box, q, id_):
+    if id_ == 0:
+        import wingdbstub
+        wingdbstub.Ensure()
+        wingdbstub.debugger.StartDebug()
+    if len(img_box.shape) >= 3:
+        img_box = np.dot(img_box[...,:3], [0.299, 0.587, 0.114])
+        img_box = img_box.astype(np.uint8)
+    result = recognizer.infer_line([img_box])
     print(id_, ' done!')
-    q.put((ret, id_))
-    #if id_ == 0:
-        #wingdbstub.debugger.Stop()
+    q.put((result, bounding_box, id_))
+    if id_ == 0:
+        wingdbstub.debugger.Stop()
     return True
     
 
